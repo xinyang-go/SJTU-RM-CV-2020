@@ -1,0 +1,12 @@
+//
+// Created by xinyang on 2019/10/25.
+//
+
+#ifndef _ALGORITHM_
+#define _ALGORITHM_
+
+#include "Algorithm.hpp"
+#include "Armor/Armor"
+#include "Energy/Energy.hpp"
+
+#endif /* _ALGORITHM_ */

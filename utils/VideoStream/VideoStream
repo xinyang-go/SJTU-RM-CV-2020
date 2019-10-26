@@ -1,0 +1,14 @@
+//
+// Created by xinyang on 2019/10/25.
+//
+
+#ifndef _VIDEO_STREAM_
+#define _VIDEO_STREAM_
+
+#include "VideoStream.hpp"
+#include "Exceptions.hpp"
+#include "VideoStream/VideoFile/VideoFile.hpp"
+#include "MindVision/MindVision.hpp"
+
+
+#endif /* _VIDEO_STREAM_ */
