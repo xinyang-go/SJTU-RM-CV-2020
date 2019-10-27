@@ -116,12 +116,16 @@ bool MindVision::control(void *p) {
             status = CameraSetExposureTime(h_camera, info->val * 1000);
             if(status != CAMERA_STATUS_SUCCESS){
                 LOGW("camera set exposure time failed with %d!", status);
+            }else{
+                exposure = info->val;
             }
             return status == CAMERA_STATUS_SUCCESS;
         case CameraControlInfo::SET_GAIN:
             status = CameraSetAnalogGain(h_camera, info->val);
             if(status != CAMERA_STATUS_SUCCESS){
                 LOGW("camera set analog gain failed with %d!", status);
+            }else{
+                gain = info->val;
             }
             return status == CAMERA_STATUS_SUCCESS;
     }
