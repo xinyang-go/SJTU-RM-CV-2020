@@ -10,7 +10,7 @@
 #include <type_traits>
 
 template<typename StateType, typename OnStateFuncType=std::function<void()>>
-class FSM{
+class FSM {
 private:
     using OnStateFunc = OnStateFuncType;
     using OnEnterFunc = std::function<void()>;
@@ -27,35 +27,35 @@ private:
     const StateType &state;
     StateType lastState;
 public:
-    explicit FSM(const StateType &state) : state(state), lastState(state){
+    explicit FSM(const StateType &state) : state(state), lastState(state) {
     }
 
-    void registerOnStateFunc(const StateType &s, const OnStateFunc &func){
+    void registerOnStateFunc(const StateType &s, const OnStateFunc &func) {
         onState.insert(std::pair(s, func));
     }
 
-    void registerOnEnterFunc(const StateType &s, const OnEnterFunc &func){
+    void registerOnEnterFunc(const StateType &s, const OnEnterFunc &func) {
         onEnter[s].emplace_back(func);
     }
 
-    void registerOnExitFunc(const StateType &s, const OnExitFunc &func){
+    void registerOnExitFunc(const StateType &s, const OnExitFunc &func) {
         onExit[s].emplace_back(func);
     }
 
-    template <typename ...Params>
-    typename std::result_of<OnStateFuncType(Params...)>::type step(Params ...params){
+    template<typename ...Params>
+    typename std::result_of<OnStateFuncType(Params...)>::type step(Params ...params) {
         auto tmpLast = lastState;
         auto tmpCurr = state;
         lastState = tmpCurr;
-        if(tmpCurr != tmpLast){
-            for(auto func:onExit[tmpLast]){
+        if (tmpCurr != tmpLast) {
+            for (auto func:onExit[tmpLast]) {
                 func();
             }
-            for(auto func:onEnter[tmpCurr]){
+            for (auto func:onEnter[tmpCurr]) {
                 func();
             }
         }
-        if(onState.find(state) != onState.end()){
+        if (onState.find(state) != onState.end()) {
             return onState[state](params...);
         }
         return typename std::result_of<OnStateFuncType(Params...)>::type();

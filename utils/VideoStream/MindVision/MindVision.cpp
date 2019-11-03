@@ -25,8 +25,7 @@ MindVision::~MindVision() {
 void cameraCallback(CameraHandle hCamera, BYTE *pFrameBuffer, tSdkFrameHead *pFrameHead, PVOID pContext) {
     auto c = (MindVision *) pContext;
     CameraImageProcess(hCamera, pFrameBuffer, c->rgb_buffer, pFrameHead);
-    cv::Mat mat(pFrameHead->iWidth, pFrameHead->iHeight, CV_8UC3, c->rgb_buffer);
-    c->queue.push(cv::Mat(pFrameHead->iWidth, pFrameHead->iHeight, CV_8UC3, c->rgb_buffer).clone());
+    c->queue.push(cv::Mat(pFrameHead->iHeight, pFrameHead->iWidth, CV_8UC3, c->rgb_buffer).clone());
 }
 
 bool MindVision::init() {
@@ -38,7 +37,7 @@ bool MindVision::init() {
     CameraSdkInit(1);
     CameraSdkStatus camera_status;
     tSdkCameraDevInfo camera_enum_list[2];
-    int camera_cnts;
+    int camera_cnts = 2;
     if ((camera_status = CameraEnumerateDevice(camera_enum_list, &camera_cnts)) != CAMERA_STATUS_SUCCESS) {
         LOGE("CameraEnumerateDevice fail with %d!", camera_status);
     }
@@ -77,7 +76,7 @@ bool MindVision::init() {
         LOGE("CameraGetCapability return error code %d", camera_status);
         return false;
     }
-    rgb_buffer = new u_char(tCapability.sResolutionRange.iHeightMax * tCapability.sResolutionRange.iWidthMax * 3);
+    rgb_buffer = new u_char[tCapability.sResolutionRange.iHeightMax * tCapability.sResolutionRange.iWidthMax * 3];
 
     CameraReadParameterFromFile(h_camera, PROJECT_DIR"/others/MV-UB31-Group0.config");
     CameraLoadParameter(h_camera, PARAMETER_TEAM_A);
@@ -93,11 +92,13 @@ bool MindVision::init() {
         CameraSetIspOutFormat(h_camera, CAMERA_MEDIA_TYPE_BGR8);
         LOGM("camera %s color ", camera_name.data());
     }
-//    CameraSetCallbackFunction(h_camera, cameraCallback, this, nullptr);
+    CameraSetCallbackFunction(h_camera, cameraCallback, this, nullptr);
     return working = true;
 }
 
 void MindVision::read(cv::Mat &src) {
+    if(!working)
+        throw FrameReadError();
     ptime ts = microsec_clock::local_time();
     while (queue.empty()) {
         ptime te = microsec_clock::local_time();
@@ -106,6 +107,7 @@ void MindVision::read(cv::Mat &src) {
             throw FrameReadError();
         }
     }
+    queue.pop(src);
 }
 
 bool MindVision::control(void *p) {

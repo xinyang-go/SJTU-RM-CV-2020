@@ -22,7 +22,7 @@ FIND_PACKAGE(Boost COMPONENTS timer REQUIRED)
 FIND_PACKAGE(Threads)
 
 # 寻找必要源文件
-FILE(GLOB_RECURSE sourcefiles "utils/*.cpp" "algorithm/Energy/*.cpp")
+FILE(GLOB_RECURSE sourcefiles "utils/*.cpp" "algorithm/Energy/*.cpp" "main/*.cpp" "algorithm/Box/*.cpp")
 
 # 选择自瞄算法，并添加到源文件编译列表中
 SET(ARMOR_TARGET "TARGET_CV" CACHE STRING INTERNAL) # candidates: TARGET_CV, TARGET_TRT, TARGET_TORCH
@@ -53,7 +53,7 @@ INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/utils)
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/algorithm)
 
 # 添加可执行文件以及链接
-ADD_EXECUTABLE("${BIN_NAME}" main.cpp ${sourcefiles})
+ADD_EXECUTABLE("${BIN_NAME}" ${sourcefiles})
 TARGET_LINK_LIBRARIES(${BIN_NAME} "${PROJECT_SOURCE_DIR}/lib/libMVSDK.so")
 TARGET_LINK_LIBRARIES(${BIN_NAME} ${OpenCV_LIBS})
 target_link_libraries(${BIN_NAME} ${Boost_LIBRARIES})

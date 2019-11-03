@@ -27,7 +27,7 @@ private:
     unsigned char *rgb_buffer;
     Queue<cv::Mat, 2> queue;
 public:
-    MindVision(int e, int g, const std::string &name);
+    MindVision(int e, int g, const std::string &name="NULL");
 
     ~MindVision() override;
 

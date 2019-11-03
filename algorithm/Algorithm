@@ -8,5 +8,6 @@
 #include "Algorithm.hpp"
 #include "Armor/Armor"
 #include "Energy/Energy.hpp"
+#include "Box/Box.hpp"
 
 #endif /* _ALGORITHM_ */

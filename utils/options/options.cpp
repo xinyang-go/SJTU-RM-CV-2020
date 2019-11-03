@@ -17,9 +17,9 @@ std::map<std::string, std::pair<std::string, void(*)(void)>> options = {
                 "show the help information.", []() {
                     LOG(LOG_MSG, "<HELP>: "
                             STR_CTR(WORD_BLUE, "All options below are for debug use."));
-                    for (const auto &option : options) {
+                    for (const auto &[str, info] : options) {
                         LOG(LOG_MSG, "<HELP>: "
-                                STR_CTR(WORD_GREEN, "%s: %s"), option.first.data(), option.second.first.data());
+                                STR_CTR(WORD_GREEN, "%s: %s"), str.data(), info.first.data());
                     }
                 }
         }},
