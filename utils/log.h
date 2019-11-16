@@ -167,6 +167,7 @@
         cnt++; \
         if(te > ts){ \
             LOGM(tag": %d fps", cnt / (te - ts)); \
+            cnt = 0, ts = te; \
         } \
     }while (0)
 #else
