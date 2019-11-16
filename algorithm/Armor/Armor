@@ -5,12 +5,9 @@
 #ifndef _ALGORITHM_ARMOR_
 #define _ALGORITHM_ARMOR_
 
-#if defined(TARGET_TRT)
+#if defined(USE_ARMOR_TRT)
     #include "ArmorTRT/ArmorTRT.hpp"
     using Armor = ArmorTRT;
-#elif defined(TARGET_TORCH)
-    #include "ArmorTorch/ArmorTorch.hpp"
-    using Armor = ArmorTorch;
 #else
     #include "ArmorCV/ArmorCV.hpp"
     using Armor = ArmorCV;

@@ -160,9 +160,21 @@
         boost::timer::auto_cpu_timer t1(tag": %w\n"); \
         codes; \
     }while (0)
+    #define CNT_FPS(tag) do{ \
+        static int cnt = 0; \
+        static auto ts = time(nullptr); \
+        auto te = time(nullptr); \
+        cnt++; \
+        if(te > ts){ \
+            LOGM(tag": %d fps", cnt / (te - ts)); \
+        } \
+    }while (0)
 #else
 	#define CNT_TIME(tag, codes, ...) codes
+    #define CNT_FPS(tag) void(0)
 #endif
+
+
 #else /* _LOG_H_ */
     #warning "Multiple include of log.h, some settings may not work."
 #endif /* _LOG_H_ */ 

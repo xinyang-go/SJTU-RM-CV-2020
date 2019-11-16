@@ -12,6 +12,24 @@ int main(int argc, char *argv[]) {
     // 创建串口对象
     Serial serial(wait_serial);
 
+
+    // 创建云台控制数据
+    GimbalControlData data{};
+
+    // 创建状态机，并注册算法对象
+    char mode = 'a';
+    MainFSM fsm(mode, {
+#ifdef USE_ARMOR
+            {'a', std::shared_ptr<Algorithm>{new Armor()}},
+#endif
+#ifdef USE_ENERGY
+            {'e', std::shared_ptr<Algorithm>{new Energy()}},
+#endif
+#ifdef USE_BOX
+            {'b', std::shared_ptr<Algorithm>{new Box()}},
+#endif
+    });
+
     // 选择视频流源
     bool from_camera = true;
     const_if (!run_with_camera) {
@@ -30,21 +48,11 @@ int main(int argc, char *argv[]) {
     }
     if (!video->init()) LOGE("Video init fail!");
 
-    // 创建云台控制数据
-    GimbalControlData data{};
-
-    // 创建状态机，并注册算法对象
-    char mode = 'a';
-    MainFSM fsm(mode, {
-            {'a', std::shared_ptr<Algorithm>{new Armor()}},
-            {'e', std::shared_ptr<Algorithm>{new Energy()}},
-            {'b', std::shared_ptr<Algorithm>{new Box()}},
-    });
-
     cv::Mat src;
 
     // 进入主循环
     while (true) {
+        CNT_FPS("main_loop");
         try {
             video->read(src);
             const_if (show_origin) {
@@ -67,6 +75,5 @@ int main(int argc, char *argv[]) {
             LOGW("something unexpected happened! restart!");
         }
     }
-
     return 0;
 }
